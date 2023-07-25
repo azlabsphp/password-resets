@@ -8,7 +8,6 @@ use App\Contracts\TokenInterface;
 
 class TokenHashManager implements TokenHasher
 {
-
     /**
      * @var IHasher
      */
@@ -32,11 +31,6 @@ class TokenHashManager implements TokenHasher
             public function check($value, $hashed_value, array $options = []): bool
             {
                 return strcmp(md5($value), $hashed_value);
-            }
-
-            public function needsRehash($hashed_value, $options): bool
-            {
-                return false;
             }
         };
     }
