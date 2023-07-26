@@ -25,7 +25,7 @@ class OtpResetPasswordCommandTest extends TestCase
     {
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $repository->deleteToken('user@example.com');
     }
 
@@ -33,7 +33,7 @@ class OtpResetPasswordCommandTest extends TestCase
     {
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new ResetPasswordCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
         // Assert
         $this->expectException(UserNotFoundException::class);
@@ -47,7 +47,7 @@ class OtpResetPasswordCommandTest extends TestCase
     {
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new ResetPasswordCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
         // Assert
         $this->expectException(PasswordResetTokenInvalidException::class);
@@ -62,7 +62,7 @@ class OtpResetPasswordCommandTest extends TestCase
     {
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new ResetPasswordCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
         
         // Act
@@ -88,7 +88,7 @@ class OtpResetPasswordCommandTest extends TestCase
     {
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new ResetPasswordCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
         
         // Act

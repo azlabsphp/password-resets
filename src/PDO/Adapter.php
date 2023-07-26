@@ -1,12 +1,14 @@
 <?php
 
-namespace Drewlabs\Passwords;
+namespace Drewlabs\Passwords\PDO;
 
 use BadMethodCallException;
-use Drewlabs\Passwords\Contracts\ConnectionInterface;
 use PDO;
 
-class PdoConnection implements ConnectionInterface
+/**
+ * @mixin \PDO
+ */
+class Adapter
 {
     /**
      * @var string
@@ -138,6 +140,18 @@ class PdoConnection implements ConnectionInterface
     public function getPdo()
     {
         return $this->pdo;
+    }
+
+    /**
+     * Proxy method call to pdo instance
+     * 
+     * @param mixed $name 
+     * @param mixed $arguments 
+     * @return mixed 
+     */
+    public function __call($name, $arguments)
+    {
+        return call_user_func_array([$this->getPdo(), $name], $arguments);
     }
 
 

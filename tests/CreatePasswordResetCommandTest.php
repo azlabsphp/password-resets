@@ -21,7 +21,7 @@ class CreatePasswordResetCommandTest extends TestCase
     {
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $repository->deleteToken('user@example.com');
     }
 
@@ -30,7 +30,7 @@ class CreatePasswordResetCommandTest extends TestCase
         // Initialize
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
 
         // Assert
@@ -47,7 +47,7 @@ class CreatePasswordResetCommandTest extends TestCase
         // Initialize
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
 
         // Assert
@@ -64,7 +64,7 @@ class CreatePasswordResetCommandTest extends TestCase
         // Initialize
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
         $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
 
         $totalCalls = 0;

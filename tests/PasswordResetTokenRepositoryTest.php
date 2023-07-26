@@ -15,7 +15,7 @@ class PasswordResetTokenRepositoryTest extends TestCase
         // Initialize
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
         // Act
         $repository->addToken((new PasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com'));
@@ -34,7 +34,7 @@ class PasswordResetTokenRepositoryTest extends TestCase
         $passwordResetToken = new PasswordResetToken('user@example.com', $randomBytes, $createdAt);
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
         // Act
         $repository->addToken($passwordResetToken);
@@ -51,7 +51,7 @@ class PasswordResetTokenRepositoryTest extends TestCase
         $passwordResetToken = new PasswordResetToken('user@example.com', $randomBytes, $createdAt);
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
         // Act
         $repository->addToken($passwordResetToken);
@@ -66,7 +66,7 @@ class PasswordResetTokenRepositoryTest extends TestCase
         // Initialize
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
-        $repository = new PasswordResetTokenRepository($database->getConnection()->table('password_resets'), $manager);
+        $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
         // Act
         $repository->addToken((new PasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com'));

@@ -7,46 +7,38 @@ interface ConnectionInterface
     /**
      * Select a value matching the conditions variables
      * 
-     * @param array $conditions 
-     * @param array $columns
+     * @param string|int $sub 
      * 
-     * @return \Traversable 
-     */
-    public function select(array $conditions = [], array $columns = ['*']);
-
-    /**
-     * Select a value matching the conditions variables
-     * 
-     * @param array $conditions 
-     * @param array $columns 
      * @return object 
      */
-    public function selectOne(array $conditions = [], array $columns = ['*']);
+    public function select($sub);
 
     /**
      * Update value matching the `$conditions` with the `$values` parameter
      * 
-     * @param array $conditions 
+     * @param int|string $sub
+     * 
      * @param array $values
      * 
      * @return int|void 
      */
-    public function update(array $conditions, array $values = []);
+    public function update($sub, array $values = []);
 
     /**
      * Delete/Remove values matching the provided condition
      * 
-     * @param array $conditions 
-     * @return mixed 
+     * @param string|int $conditions
+     * 
+     * @return bool 
      */
-    public function delete(array $conditions);
+    public function delete($sub);
 
     /**
      * Add a value with the `$value` attributes
      * 
      * @param array $values
      * 
-     * @return mixed 
+     * @return void 
      */
     public function create(array $values);
 
@@ -54,7 +46,8 @@ interface ConnectionInterface
      * Exceute a statement in a transaction
      * 
      * @param callable $callback 
-     * @param mixed $args 
+     * @param mixed $args
+     * 
      * @return mixed 
      */
     public function transaction(callable $callback, ...$args);

@@ -23,11 +23,6 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
     private $hasher;
 
     /**
-     * @var string
-     */
-    private $table;
-
-    /**
      * Number of seconds after which token expires
      * 
      * @var int
@@ -65,10 +60,9 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
 
     public function getToken(string $sub): ?HashedTokenInterface
     {
-        return $this->connection->transaction(function (array $attributes) {
-            // Bind PDO param
-
-            $result = $this->connection->selectOne($attributes);
+        return $this->connection->transaction(function (string $sub) {
+            // Select password token using the subject value
+            $result = $this->connection->select($sub);
 
             if (false === $result) {
                 return null;
@@ -76,10 +70,9 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
             $createdAt = null !== $result->created_at ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$result->created_at) : null;
             $expiresAt = null !== $createdAt ? $createdAt->modify(sprintf("+%d seconds", $this->expiresTtl)) : null;
 
-
             // Return a hashed password token instance
             return new HashedPasswordResetToken($result->sub, $result->token, $createdAt, $expiresAt);
-        }, ['sub' => $sub]);
+        }, (string)$sub);
     }
 
     public function hasToken(string $sub, string $token): bool
@@ -92,8 +85,8 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
 
     public function deleteToken(string $sub): bool
     {
-        return $this->connection->transaction(function (array $conditions) use ($sub) {
-            return $this->connection->delete($conditions);
-        }, ['sub' => $sub]);
+        return $this->connection->transaction(function (string $sub) {
+            return $this->connection->delete($sub);
+        }, (string)$sub);
     }
 }
