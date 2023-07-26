@@ -1,5 +1,5 @@
 {
-    "name": "drewlabs/password-reset",
+    "name": "drewlabs/passwords",
     "description": "Password resets implementation for drewlabs auth library",
     "type": "library",
     "require-dev": {
