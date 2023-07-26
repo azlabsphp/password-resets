@@ -60,19 +60,17 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
 
     public function getToken(string $sub): ?HashedTokenInterface
     {
-        return $this->connection->transaction(function (string $sub) {
-            // Select password token using the subject value
-            $result = $this->connection->select($sub);
+        // Select password token using the subject value
+        $result = $this->connection->select((string)$sub);
 
-            if (false === $result) {
-                return null;
-            }
-            $createdAt = null !== $result->created_at ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$result->created_at) : null;
-            $expiresAt = null !== $createdAt ? $createdAt->modify(sprintf("+%d seconds", $this->expiresTtl)) : null;
+        if (false === $result) {
+            return null;
+        }
+        $createdAt = null !== $result->created_at ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$result->created_at) : null;
+        $expiresAt = null !== $createdAt ? $createdAt->modify(sprintf("+%d seconds", $this->expiresTtl)) : null;
 
-            // Return a hashed password token instance
-            return new HashedPasswordResetToken($result->sub, $result->token, $createdAt, $expiresAt);
-        }, (string)$sub);
+        // Return a hashed password token instance
+        return new HashedPasswordResetToken($result->sub, $result->token, $createdAt, $expiresAt);
     }
 
     public function hasToken(string $sub, string $token): bool
