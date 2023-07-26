@@ -48,9 +48,9 @@ class PasswordResetTokenFactory
     public function create($sub): TokenInterface
     {
         $token = hash_hmac($this->algo ?? 'sha256', $this->newKey(40), $this->key);
-
+        $createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
         // return token static instance
-        return new PasswordResetToken((string)$sub, $token, new DateTimeImmutable);
+        return new PasswordResetToken((string)$sub, $token, $createdAt);
     }
 
     /**

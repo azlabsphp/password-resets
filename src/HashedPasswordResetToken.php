@@ -69,6 +69,11 @@ class HashedPasswordResetToken implements HashedTokenInterface
         return $this->expiresAt;
     }
 
+    public function withExpiresAt(DateTimeInterface $at)
+    {
+        return new static($this->getSubject(), $this->getToken(), $this->getCreatedAt(), $at);
+    } 
+
     public function __toString()
     {
         return $this->hash;

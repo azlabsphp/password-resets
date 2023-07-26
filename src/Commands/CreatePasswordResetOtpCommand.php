@@ -2,8 +2,8 @@
 
 namespace Drewlabs\Passwords\Commands;
 
-use App\Exceptions\ThrottleResetException;
-use App\Exceptions\UserNotFoundException;
+use Drewlabs\Passwords\Exceptions\ThrottleResetException;
+use Drewlabs\Passwords\Exceptions\UserNotFoundException;
 use Drewlabs\Passwords\Events\PasswordResetOtpCreated;
 use Drewlabs\Passwords\Otp;
 use Drewlabs\Passwords\OtpPasswordResetTokenFactory;
@@ -43,7 +43,7 @@ class CreatePasswordResetOtpCommand
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
      * @param OtpPasswordResetTokenFactory $tokenFactory 
-     * @param callable $dispatcher 
+     * @param callable|null $dispatcher 
      * @param int $throttleTtl 
      * @return void 
      */
@@ -51,7 +51,7 @@ class CreatePasswordResetOtpCommand
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
         OtpPasswordResetTokenFactory $tokenFactory,
-        callable $dispatcher,
+        callable $dispatcher = null,
         $throttleTtl = 60
     ) {
         $this->repository = $repository;
@@ -79,7 +79,7 @@ class CreatePasswordResetOtpCommand
             throw new UserNotFoundException($sub);
         }
 
-        if ($this->isRecentlyCreated($this->repository->getToken($sub))) {
+        if ((null !== ($hashedToken = $this->repository->getToken($sub))) && $this->isRecentlyCreated($hashedToken)) {
             throw new ThrottleResetException($sub);
         }
 
@@ -90,7 +90,9 @@ class CreatePasswordResetOtpCommand
         $this->repository->addToken($token);
 
         $callback = $callback ?? function (CanResetPassword $user, string $otp) {
-            call_user_func($this->dispatcher, new PasswordResetOtpCreated($user, $otp));
+            if ($this->dispatcher) {
+                call_user_func($this->dispatcher, new PasswordResetOtpCreated($user, $otp));
+            }
         };
 
         return call_user_func($callback, $user, $otp);

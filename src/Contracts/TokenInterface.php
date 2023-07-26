@@ -26,20 +26,4 @@ interface TokenInterface
      * @return DateTimeInterface 
      */
     public function getCreatedAt(): \DateTimeInterface;
-
-    /**
-     * Returns the date at which token expires
-     * 
-     * @return \DateTimeInterface|null 
-     */
-    public function getExpiresAt();
-
-    /**
-     * Immutable interface that set expiration date time of the token
-     * 
-     * @param DateTimeInterface $at 
-     * 
-     * @return static 
-     */
-    public function withExpiresAt(\DateTimeInterface $at);
 }

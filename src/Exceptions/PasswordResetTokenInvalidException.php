@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Drewlabs\Passwords\Exceptions;
 
 use Exception;
 

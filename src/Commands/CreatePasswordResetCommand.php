@@ -2,8 +2,8 @@
 
 namespace Drewlabs\Passwords\Commands;
 
-use App\Exceptions\ThrottleResetException;
-use App\Exceptions\UserNotFoundException;
+use Drewlabs\Passwords\Exceptions\ThrottleResetException;
+use Drewlabs\Passwords\Exceptions\UserNotFoundException;
 use Drewlabs\Passwords\Events\PasswordResetLinkCreated;
 use Drewlabs\Passwords\PasswordResetTokenFactory;
 use Drewlabs\Passwords\Traits\SupportThrottleRequests;
@@ -13,7 +13,7 @@ use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
 use Drewlabs\Passwords\Contracts\TokenInterface;
 use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
 
-class CreatePasswordResetLinkCommand
+class CreatePasswordResetCommand
 {
     use SupportThrottleRequests;
 
@@ -48,8 +48,8 @@ class CreatePasswordResetLinkCommand
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
      * @param PasswordResetTokenFactory $tokenFactory 
-     * @param callable $dispatcher 
      * @param callable $url 
+     * @param callable|null $dispatcher 
      * @param int $throttleTtl 
      * @return void 
      */
@@ -57,8 +57,8 @@ class CreatePasswordResetLinkCommand
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
         PasswordResetTokenFactory $tokenFactory,
-        callable $dispatcher,
         callable $url,
+        callable $dispatcher = null,
         $throttleTtl = 60
     ) {
         $this->repository = $repository;
@@ -84,7 +84,7 @@ class CreatePasswordResetLinkCommand
             throw new UserNotFoundException($sub);
         }
 
-        if ($this->isRecentlyCreated($this->repository->getToken($sub))) {
+        if ((null !== ($hashedToken = $this->repository->getToken($sub))) && $this->isRecentlyCreated($hashedToken)) {
             throw new ThrottleResetException($sub);
         }
 
@@ -94,11 +94,13 @@ class CreatePasswordResetLinkCommand
         // Add the token to the tokens collection
         $this->repository->addToken($token);
 
-        $callback = $callback ?? function (CanResetPassword $user, TokenInterface $token) use ($route) {
-            call_user_func($this->dispatcher, new PasswordResetLinkCreated($user, call_user_func($this->url, $route, ['token' => $token])));
+        $callback = $callback ?? function (CanResetPassword $user, string $url) {
+            if ($this->dispatcher) {
+                call_user_func($this->dispatcher, new PasswordResetLinkCreated($user, $url));
+            }
         };
 
         // TODO: Publish event instance
-        return call_user_func($callback, $user, $token);
+        return call_user_func($callback, $user, call_user_func($this->url, $route, ['token' => $token->getToken()]), $token);
     }
 }

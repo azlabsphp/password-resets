@@ -28,6 +28,6 @@ trait SupportThrottleRequests
         if ($this->throttleTtl <= 0) {
             return false;
         }
-        return time() < \DateTimeImmutable::createFromInterface($token->getCreatedAt())->modify(sprintf("+%d seconds", $this->throttleTtl));
+        return time() < \DateTimeImmutable::createFromInterface($token->getCreatedAt())->modify(sprintf("+%d seconds", $this->throttleTtl))->getTimestamp();
     }
 }

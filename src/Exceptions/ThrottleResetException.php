@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Drewlabs\Passwords\Exceptions;
 
 use Exception;
 
@@ -14,7 +14,7 @@ class ThrottleResetException extends Exception
      */
     public function __construct(string $sub)
     {
-        $message = sprintf("Throttle password reset request for %s", $sub);
-        parent::__construct($message, 500);
+        $message = sprintf("Too many attempts for %s", $sub);
+        parent::__construct($message, 429);
     }
 }

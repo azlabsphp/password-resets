@@ -41,5 +41,18 @@ class HashedPasswordResetTokenTest extends TestCase
         // Assert
         $this->assertEquals((string)$bytes, (string)$hashedPassword);
     }
+    
+
+    public function test_password_reset_token_with_expires_at_is_immutable()
+    {
+        $prToken = new HashedPasswordResetToken('user@example.com', new RandomBytes, new DateTimeImmutable);
+
+        $expiresAt = (new DateTimeImmutable)->modify('+30 minutes');
+        $prToken2 = $prToken->withExpiresAt($expiresAt);
+
+        $this->assertNotEquals($prToken->getExpiresAt(), $prToken2->getExpiresAt());
+        $this->assertNull($prToken->getExpiresAt());
+        $this->assertEquals($expiresAt, $prToken2->getExpiresAt());
+    }
 
 }

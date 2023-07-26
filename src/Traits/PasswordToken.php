@@ -40,14 +40,4 @@ trait PasswordToken
     {
         return $this->createdAt;
     }
-
-    public function getExpiresAt()
-    {
-        return $this->expiresAt;
-    }
-
-    public function withExpiresAt(DateTimeInterface $at)
-    {
-        return new static($this->getSubject(), $this->getToken(), $this->getCreatedAt(), $at);
-    } 
 }

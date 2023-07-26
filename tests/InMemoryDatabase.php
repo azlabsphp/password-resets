@@ -2,36 +2,30 @@
 
 namespace Drewlabs\Passwords\Tests;
 
-use PDO;
+use Drewlabs\Passwords\PdoConnection;
 
 class InMemoryDatabase
 {
-    private $pdo;
+    private $connection;
 
     public function __construct()
     {
-        $this->pdo = new PDO("sqlite:memory:");
+        $this->connection = new PdoConnection("sqlite:memory");
         $sql = "
             CREATE TABLE IF NOT EXISTS password_resets (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 sub TEXT NOT NULL,
                 token TEXT NOT NULL,
-                created_at DATE NOT NULL
+                created_at DATETIME NOT NULL
             )
         ";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->connection->getPdo()->prepare($sql);
         // $stmt->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt->execute();
     }
 
-    public function getPdo()
+    public function getConnection()
     {
-        return $this->pdo;
-    }
-
-
-    public function __destruct()
-    {
-        unset($this->pdo);
+        return $this->connection;
     }
 }

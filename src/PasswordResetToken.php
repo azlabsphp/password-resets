@@ -16,13 +16,11 @@ class PasswordResetToken implements TokenInterface
      * @param mixed $sub 
      * @param string $token 
      * @param DateTimeInterface $createdAt 
-     * @param DateTimeInterface|null $expiresAt 
      */
-    public function __construct($sub, string $token, \DateTimeInterface $createdAt, \DateTimeInterface $expiresAt = null)
+    public function __construct($sub, string $token, \DateTimeInterface $createdAt)
     {
         $this->token = $token;
         $this->createdAt = $createdAt;
         $this->sub = $sub;
-        $this->expiresAt = $expiresAt;
     }
 }

@@ -3,8 +3,8 @@
 namespace Drewlabs\Passwords\Commands;
 
 
-use App\Exceptions\PasswordResetTokenInvalidException;
-use App\Exceptions\UserNotFoundException;
+use Drewlabs\Passwords\Exceptions\PasswordResetTokenInvalidException;
+use Drewlabs\Passwords\Exceptions\UserNotFoundException;
 use Drewlabs\Passwords\Events\ResetPassword;
 use Closure;
 use Drewlabs\Passwords\Contracts\CanResetPassword;
@@ -34,13 +34,13 @@ class ResetPasswordCommand
      * 
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
-     * @param callable $dispatcher 
+     * @param callable|null $dispatcher 
      * @return void 
      */
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
-        callable $dispatcher
+        callable $dispatcher = null
     ) {
         $this->repository = $repository;
         $this->users = $users;
@@ -58,19 +58,22 @@ class ResetPasswordCommand
      * @throws UserNotFoundException 
      * @throws PasswordResetTokenInvalidException 
      */
-    public function handle($sub, string $token, string $password, \Closure $callback)
+    public function handle($sub, string $token, string $password, \Closure $callback  = null)
     {
         if (null === ($user = $this->users->retrieveForPasswordReset((string)$sub))) {
             throw new UserNotFoundException($sub);
         }
 
         // Check if repository has a given token
-        if ($this->repository->hasToken($sub, $token)) {
+        // If repository does not have the given token for the subject, we throw a PasswordResetTokenInvalidException
+        if (!$this->repository->hasToken($sub, $token)) {
             throw new PasswordResetTokenInvalidException($token);
         }
 
         $callback = $callback ?? function (CanResetPassword $user, string $password) {
-            call_user_func($this->dispatcher, new ResetPassword($user, $password));
+            if ($this->dispatcher) {
+                call_user_func($this->dispatcher, new ResetPassword($user, $password));
+            }
         };
 
         // Remove the subject token from repostory
