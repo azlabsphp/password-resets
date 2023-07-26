@@ -42,22 +42,19 @@ class CreatePasswordResetOtpCommand
      * 
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
-     * @param OtpPasswordResetTokenFactory $tokenFactory 
      * @param callable|null $dispatcher 
      * @param int $throttleTtl 
-     * @return void 
      */
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
-        OtpPasswordResetTokenFactory $tokenFactory,
         callable $dispatcher = null,
         $throttleTtl = 60
     ) {
         $this->repository = $repository;
         $this->users = $users;
         $this->dispatcher = $dispatcher;
-        $this->tokenFactory = $tokenFactory;
+        $this->tokenFactory = new OtpPasswordResetTokenFactory;
         $this->throttleTtl = $throttleTtl;
     }
 

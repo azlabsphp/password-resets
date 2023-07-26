@@ -33,7 +33,7 @@ class CreatePasswordResetOtpCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider);
 
         // Assert
         $this->expectException(UserNotFoundException::class);
@@ -50,7 +50,7 @@ class CreatePasswordResetOtpCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider);
 
         // Assert
         $this->expectException(ThrottleResetException::class);
@@ -67,7 +67,7 @@ class CreatePasswordResetOtpCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new OtpPasswordResetTokenFactory);
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider);
 
         $totalCalls = 0;
         $calledWith = null;

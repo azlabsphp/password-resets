@@ -37,10 +37,10 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
      * @param int $expiresTtl 
      * @return void 
      */
-    public function __construct(ConnectionInterface $connection, TokenHasher $hasher, int $expiresTtl = 60)
+    public function __construct(ConnectionInterface $connection, TokenHasher $hasher = null, int $expiresTtl = 60)
     {
         $this->connection = $connection;
-        $this->hasher = $hasher;
+        $this->hasher = $hasher ?? new PasswordResetTokenHashManager;
         $this->expiresTtl = $expiresTtl * 60;
     }
 

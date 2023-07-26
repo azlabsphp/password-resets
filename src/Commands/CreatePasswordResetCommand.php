@@ -56,15 +56,15 @@ class CreatePasswordResetCommand
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
-        PasswordResetTokenFactory $tokenFactory,
-        callable $url,
+        string $key,
+        callable $url = null,
         callable $dispatcher = null,
         $throttleTtl = 60
     ) {
         $this->repository = $repository;
         $this->users = $users;
         $this->dispatcher = $dispatcher;
-        $this->tokenFactory = $tokenFactory;
+        $this->tokenFactory = new PasswordResetTokenFactory($key);
         $this->url = $url;
         $this->throttleTtl = $throttleTtl;
     }
@@ -72,13 +72,20 @@ class CreatePasswordResetCommand
     /**
      * 
      * @param string $sub 
-     * @param string $route 
+     * @param string|null|Closure(CanResetPasswordProvider $user, TokenInterface $token): void $routeOrCallable 
      * @param null|Closure(CanResetPasswordProvider $user, TokenInterface $token): void $callback 
      * @return void 
      */
-    public function handle(string $sub, string $route, \Closure $callback = null)
+    public function handle(string $sub, $routeOrCallable = null, \Closure $callback = null)
     {
         $user = $this->users->retrieveForPasswordReset($sub);
+
+        // Case two parameters are passed as argument and the second argument is a callable instance
+        // we set the callback to be equals to the second argument and the route to be null
+        if (null === $callback && !is_string($routeOrCallable) && is_callable($routeOrCallable)) {
+            $callback = $routeOrCallable;
+            $routeOrCallable = null;
+        }
 
         if (null === $user) {
             throw new UserNotFoundException($sub);
@@ -100,7 +107,10 @@ class CreatePasswordResetCommand
             }
         };
 
+        // construc the callback arguments
+        $args = null !== $routeOrCallable && null !== $this->url ? [$user, call_user_func($this->url, $routeOrCallable, ['token' => $token->getToken()]), $token] : [$user, $token];
+
         // TODO: Publish event instance
-        return call_user_func($callback, $user, call_user_func($this->url, $route, ['token' => $token->getToken()]), $token);
+        return call_user_func_array($callback, $args);
     }
 }

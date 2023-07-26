@@ -31,7 +31,7 @@ class CreatePasswordResetCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
 
         // Assert
         $this->expectException(UserNotFoundException::class);
@@ -48,7 +48,7 @@ class CreatePasswordResetCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
 
         // Assert
         $this->expectException(ThrottleResetException::class);
@@ -65,7 +65,7 @@ class CreatePasswordResetCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
 
         $totalCalls = 0;
         $calledWith = null;

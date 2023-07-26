@@ -6,7 +6,6 @@ use Drewlabs\Passwords\Contracts\CanResetPassword;
 use Drewlabs\Passwords\Contracts\TokenInterface;
 use Drewlabs\Passwords\Exceptions\PasswordResetTokenInvalidException;
 use Drewlabs\Passwords\Exceptions\UserNotFoundException;
-use Drewlabs\Passwords\PasswordResetTokenFactory;
 use Drewlabs\Passwords\PasswordResetTokenHashManager;
 use Drewlabs\Passwords\PasswordResetTokenRepository;
 use Drewlabs\Passwords\Tests\CanResetPasswordProvider;
@@ -51,7 +50,7 @@ class ResetPasswordCommandTest extends TestCase
         $this->expectException(PasswordResetTokenInvalidException::class);
 
         // Act
-        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
+        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
         $createCommand->handle('user@example.com', 'password.create');
         $command->handle('user@example.com', 'MyToken', 'MyPassword');
     }
@@ -69,7 +68,7 @@ class ResetPasswordCommandTest extends TestCase
          */
         $passwordToken = null;
         $password = null;
-        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
+        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
         $callback = function(CanResetPassword $user, string $url, TokenInterface $token) use (&$passwordToken) {
             $passwordToken = $token->getToken();
         };
@@ -94,7 +93,7 @@ class ResetPasswordCommandTest extends TestCase
          * @var string
          */
         $passwordToken = null;
-        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new PasswordResetTokenFactory(new RandomBytes), new UrlFactory(new TestUrlFactory));
+        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
         $callback = function(CanResetPassword $user, string $url, TokenInterface $token) use (&$passwordToken) {
             $passwordToken = $token->getToken();
         };
