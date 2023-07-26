@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Support;
+namespace Drewlabs\Passwords;
 
-use App\Contracts\HashedTokenInterface;
 use DateTimeInterface;
+use Drewlabs\Passwords\Contracts\HashedTokenInterface;
 
-class HashedPasswordToken implements HashedTokenInterface
+class HashedPasswordResetToken implements HashedTokenInterface
 {
     /**
      * @var string
@@ -29,6 +29,7 @@ class HashedPasswordToken implements HashedTokenInterface
 
     /**
      * Create hashed password token class instance
+     * 
      * @param string $sub 
      * @param string $hash 
      * @param \DateTimeInterface $createdAt

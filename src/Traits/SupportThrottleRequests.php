@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Support\Traits;
+namespace Drewlabs\Passwords\Traits;
 
-use App\Contracts\HashedTokenInterface;
+use Drewlabs\Passwords\Contracts\HashedTokenInterface;
 
 trait SupportThrottleRequests
 {
@@ -13,6 +13,12 @@ trait SupportThrottleRequests
      */
     private $throttleTtl;
 
+    /**
+     * Check if the token is recently created
+     * 
+     * @param HashedTokenInterface $token 
+     * @return bool 
+     */
     public function isRecentlyCreated(HashedTokenInterface $token)
     {
         if (null === $token) {

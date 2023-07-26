@@ -8,7 +8,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Drewlabs\\PasswordReset\\": "src/"
+            "Drewlabs\\Passwords\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drewlabs\\Passwords\\Tests\\": "tests/"
         }
     },
     "authors": [

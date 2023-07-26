@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace Drewlabs\Passwords\Contracts;
 
 interface TokenHasher
 {
@@ -9,7 +9,7 @@ interface TokenHasher
      * 
      * @param TokenInterface $token
      */
-    public function hash(TokenInterface $token): HashedTokenInterface;
+    public function make(TokenInterface $token): HashedTokenInterface;
 
     /**
      * Match token against a hashed value of the token

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Support\Traits;
+namespace Drewlabs\Passwords\Traits;
 
 use DateTimeInterface;
 
 trait PasswordToken
 {
-
     /**
      * @var string
      */

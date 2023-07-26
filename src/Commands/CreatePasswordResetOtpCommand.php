@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Support\Commands;
+namespace Drewlabs\Passwords\Commands;
 
-use App\Contracts\CanResetPassword;
-use App\Contracts\CanResetPasswordProvider;
-use App\Contracts\TokenRepositoryInterface;
 use App\Exceptions\ThrottleResetException;
 use App\Exceptions\UserNotFoundException;
-use App\Support\Events\PasswordResetOtpCreated;
-use App\Support\Otp;
-use App\Support\OtpPasswordTokenFactory;
-use App\Support\Traits\SupportThrottleRequests;
+use Drewlabs\Passwords\Events\PasswordResetOtpCreated;
+use Drewlabs\Passwords\Otp;
+use Drewlabs\Passwords\OtpPasswordResetTokenFactory;
+use Drewlabs\Passwords\Traits\SupportThrottleRequests;
 use Closure;
+use Drewlabs\Passwords\Contracts\CanResetPassword;
+use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
+use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
 
 class CreatePasswordResetOtpCommand
 {
     use SupportThrottleRequests;
 
     /**
-     * @var OtpPasswordTokenFactory
+     * @var OtpPasswordResetTokenFactory
      */
     private $tokenFactory;
 
@@ -42,7 +42,7 @@ class CreatePasswordResetOtpCommand
      * 
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
-     * @param OtpPasswordTokenFactory $tokenFactory 
+     * @param OtpPasswordResetTokenFactory $tokenFactory 
      * @param callable $dispatcher 
      * @param int $throttleTtl 
      * @return void 
@@ -50,7 +50,7 @@ class CreatePasswordResetOtpCommand
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
-        OtpPasswordTokenFactory $tokenFactory,
+        OtpPasswordResetTokenFactory $tokenFactory,
         callable $dispatcher,
         $throttleTtl = 60
     ) {

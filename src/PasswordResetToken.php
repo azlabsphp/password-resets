@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Support;
+namespace Drewlabs\Passwords;
 
-use App\Contracts\TokenInterface;
-use App\Support\Traits\PasswordToken as PasswordTokenMixin;
+use Drewlabs\Passwords\Traits\PasswordToken as PasswordTokenMixin;
 use DateTimeInterface;
+use Drewlabs\Passwords\Contracts\TokenInterface;
 
-class PasswordToken implements TokenInterface
+class PasswordResetToken implements TokenInterface
 {
     use PasswordTokenMixin;
 

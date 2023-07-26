@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Support;
+namespace Drewlabs\Passwords;
 
 use DateTimeImmutable;
+use Drewlabs\Passwords\Contracts\TokenInterface;
 use InvalidArgumentException;
-use App\Contracts\TokenInterface;
 
-class PasswordTokenFactory
+class PasswordResetTokenFactory
 {
     /**
      * @var string
@@ -50,7 +50,7 @@ class PasswordTokenFactory
         $token = hash_hmac($this->algo ?? 'sha256', $this->newKey(40), $this->key);
 
         // return token static instance
-        return new PasswordToken((string)$sub, $token, new DateTimeImmutable);
+        return new PasswordResetToken((string)$sub, $token, new DateTimeImmutable);
     }
 
     /**

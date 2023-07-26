@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Support;
+namespace Drewlabs\Passwords;
 
-use App\Contracts\HashedTokenInterface;
-use App\Contracts\TokenHasher;
-use App\Contracts\TokenInterface;
-use App\Contracts\TokenRepositoryInterface;
+use Drewlabs\Passwords\Contracts\HashedTokenInterface;
+use Drewlabs\Passwords\Contracts\TokenHasher;
+use Drewlabs\Passwords\Contracts\TokenInterface;
+use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
 use PDO;
 
 class PdoTokenRepository implements TokenRepositoryInterface
@@ -45,26 +45,22 @@ class PdoTokenRepository implements TokenRepositoryInterface
      * @param int $throttleTtl 
      * @return void 
      */
-    public function __construct(PDO $connection, TokenHasher $hasher, string $table, $expiresTtl = 60)
+    public function __construct(PDO $connection, TokenHasher $hasher, string $table, int $expiresTtl = 60)
     {
         $this->connection = $connection;
         $this->hasher = $hasher;
         $this->table = $table;
-        $this->expiresTtl = $expiresTtl;
+        $this->expiresTtl = $expiresTtl * 60;
     }
 
     public function addToken(TokenInterface $token)
     {
         $this->transaction(function (\PDOStatement $stmt) use ($token) {
-            $hashedToken = $this->hasher->hash($token);
-            // Bind PDO param
-            $stmt->bindParam(1, (string)$hashedToken->getSubject(), \PDo::PARAM_STR);
-            $stmt->bindParam(2, $hashedToken->getToken(), \PDo::PARAM_STR);
-            $stmt->bindParam(3, (null !== ($createdAt = $token->getCreatedAt()) ? $createdAt->format('Y-m-d H:i:s') : null), \PDo::PARAM_STR);
+            $hashedToken = $this->hasher->make($token);
             // Execute the PDO statement
-            $stmt->execute();
+            $stmt->execute([(string)$hashedToken->getSubject(), $hashedToken->getToken(), (null !== ($createdAt = $token->getCreatedAt()) ? $createdAt->format('Y-m-d H:i:s') : null)]);
             // Prepare PDO statement
-        }, $this->preparePDOStatement(sprintf("INSERT INTO %s (sub, token, created_at) VALUES (?, ?, ?)", $this->table)));
+        }, $this->preparePDOStatement(sprintf("INSERT INTO %s(sub, token, created_at) VALUES (?, ?, ?)", $this->table)));
     }
 
     public function getToken(string $sub): ?HashedTokenInterface
@@ -86,7 +82,7 @@ class PdoTokenRepository implements TokenRepositoryInterface
             $expiresAt = null !== $createdAt ? $createdAt->modify(sprintf("+%d seconds", $this->expiresTtl)) : null;
 
             // Returne a hashed password token instance
-            return new HashedPasswordToken($result->sub, $result->token, $createdAt, $expiresAt);
+            return new HashedPasswordResetToken($result->sub, $result->token, $createdAt, $expiresAt);
 
             // Prepare PDO statement
         }, $this->preparePDOStatement(sprintf("SELECT * FROM %s WHERE sub = ?", $this->table)));
@@ -113,7 +109,7 @@ class PdoTokenRepository implements TokenRepositoryInterface
 
     private function preparePDOStatement(string $sql)
     {
-        $stmt = $this->connection->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_SCROLL]);
+        $stmt = $this->connection->prepare($sql);
         if (false === $stmt) {
             list($err, $_, $message) = $this->connection->errorInfo();
             throw new \PDOException($message ?? sprintf("SQL ERROR: %s", $sql, $err ? intval($err) : 500));
@@ -128,7 +124,7 @@ class PdoTokenRepository implements TokenRepositoryInterface
             $result = call_user_func($callback, ...$args);
             $this->connection->commit();
             return $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->connection->rollback();
             throw $e;
         }

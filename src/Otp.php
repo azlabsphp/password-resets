@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace Drewlabs\Passwords;
 
 use TypeError;
 use Error;

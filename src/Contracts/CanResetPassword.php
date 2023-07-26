@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace Drewlabs\Passwords\Contracts;
 
 interface CanResetPassword
 {

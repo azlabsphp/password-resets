@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Support\Commands;
+namespace Drewlabs\Passwords\Commands;
 
-use App\Contracts\CanResetPassword;
-use App\Contracts\CanResetPasswordProvider;
-use App\Contracts\TokenRepositoryInterface;
+
 use App\Exceptions\PasswordResetTokenInvalidException;
 use App\Exceptions\UserNotFoundException;
-use App\Support\Events\ResetPassword;
+use Drewlabs\Passwords\Events\ResetPassword;
 use Closure;
+use Drewlabs\Passwords\Contracts\CanResetPassword;
+use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
+use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
 
 class ResetPasswordCommand
 {

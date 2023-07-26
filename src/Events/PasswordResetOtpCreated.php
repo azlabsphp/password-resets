@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Support\Events;
+namespace Drewlabs\Passwords\Events;
 
-use App\Contracts\CanResetPassword;
+use Drewlabs\Passwords\Contracts\CanResetPassword;
 
 class PasswordResetOtpCreated
 {

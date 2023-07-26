@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Support\Commands;
+namespace Drewlabs\Passwords\Commands;
 
-use App\Contracts\CanResetPassword;
-use App\Contracts\CanResetPasswordProvider;
-use App\Contracts\TokenInterface;
-use App\Contracts\TokenRepositoryInterface;
 use App\Exceptions\ThrottleResetException;
 use App\Exceptions\UserNotFoundException;
-use App\Support\Events\PasswordResetLinkCreated;
-use App\Support\PasswordTokenFactory;
-use App\Support\Traits\SupportThrottleRequests;
+use Drewlabs\Passwords\Events\PasswordResetLinkCreated;
+use Drewlabs\Passwords\PasswordResetTokenFactory;
+use Drewlabs\Passwords\Traits\SupportThrottleRequests;
 use Closure;
+use Drewlabs\Passwords\Contracts\CanResetPassword;
+use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
+use Drewlabs\Passwords\Contracts\TokenInterface;
+use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
 
 class CreatePasswordResetLinkCommand
 {
@@ -23,7 +23,7 @@ class CreatePasswordResetLinkCommand
     private $url;
 
     /**
-     * @var PasswordTokenFactory
+     * @var PasswordResetTokenFactory
      */
     private $tokenFactory;
 
@@ -47,7 +47,7 @@ class CreatePasswordResetLinkCommand
      * 
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
-     * @param PasswordTokenFactory $tokenFactory 
+     * @param PasswordResetTokenFactory $tokenFactory 
      * @param callable $dispatcher 
      * @param callable $url 
      * @param int $throttleTtl 
@@ -56,7 +56,7 @@ class CreatePasswordResetLinkCommand
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
-        PasswordTokenFactory $tokenFactory,
+        PasswordResetTokenFactory $tokenFactory,
         callable $dispatcher,
         callable $url,
         $throttleTtl = 60

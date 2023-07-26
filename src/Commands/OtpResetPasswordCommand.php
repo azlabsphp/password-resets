@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Support\Commands;
+namespace Drewlabs\Passwords\Commands;
 
-use App\Contracts\CanResetPassword;
-use App\Contracts\CanResetPasswordProvider;
-use App\Contracts\TokenRepositoryInterface;
 use App\Exceptions\PasswordResetTokenInvalidException;
 use App\Exceptions\UserNotFoundException;
-use App\Support\Events\ResetPassword;
-use App\Support\OtpPasswordTokenFactory;
+use Drewlabs\Passwords\Events\ResetPassword;
+use Drewlabs\Passwords\OtpPasswordResetTokenFactory;
 use Closure;
+use Drewlabs\Passwords\Contracts\CanResetPassword;
+use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
+use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
 
 class OtpResetPasswordCommand
 {
     /**
-     * @var OtpPasswordTokenFactory
+     * @var OtpPasswordResetTokenFactory
      */
     private $tokenFactory;
 
@@ -39,14 +39,14 @@ class OtpResetPasswordCommand
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
      * @param callable $dispatcher 
-     * @param OtpPasswordTokenFactory $tokenFactory 
+     * @param OtpPasswordResetTokenFactory $tokenFactory 
      * @return void 
      */
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
         callable $dispatcher,
-        OtpPasswordTokenFactory $tokenFactory
+        OtpPasswordResetTokenFactory $tokenFactory
     ) {
         $this->repository = $repository;
         $this->users = $users;
