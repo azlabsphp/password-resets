@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba02ce8a7f980c6a5fcdf8af99881779",
-    "packages": [],
+    "content-hash": "6e61a714cca1c2ac95f3fdd26b6b7238",
+    "packages": [
+        {
+            "name": "drewlabs/password-contracts",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/azlabsphp/password-contracts.git",
+                "reference": "c42b9abca5255448b940f8b7db5e1757cf570351"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/azlabsphp/password-contracts/zipball/c42b9abca5255448b940f8b7db5e1757cf570351",
+                "reference": "c42b9abca5255448b940f8b7db5e1757cf570351",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Drewlabs\\Passwords\\Contracts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "azandrew-sidoine",
+                    "email": "azandrewdevelopper@gmail.com"
+                }
+            ],
+            "description": "Interfaces and Contracts for drewlabs/passwords library",
+            "keywords": [
+                "Authentication",
+                "passwords"
+            ],
+            "support": {
+                "issues": "https://github.com/azlabsphp/password-contracts/issues",
+                "source": "https://github.com/azlabsphp/password-contracts/tree/v0.2.0"
+            },
+            "time": "2023-07-26T23:26:03+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
