@@ -1,0 +1,5 @@
+# Changelogs
+
+## [0.2.1] 2023-07-26
+
+- Moved abstractions like interfaces/contracts to a dedicated library called drewlabs/password-contracts
