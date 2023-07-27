@@ -30,7 +30,6 @@ class ResetPasswordCommand
     private $dispatcher;
 
     /**
-     * 
      * @var bool
      */
     private $autoReset = false;

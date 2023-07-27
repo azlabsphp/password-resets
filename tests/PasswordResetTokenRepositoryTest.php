@@ -77,5 +77,4 @@ class PasswordResetTokenRepositoryTest extends TestCase
         // Assert
         $this->assertNull($result);
     }
-
 }

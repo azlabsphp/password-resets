@@ -34,22 +34,30 @@ class OtpResetPasswordCommand
     private $dispatcher;
 
     /**
+     * @var bool
+     */
+    private $autoReset = false;
+
+    /**
      * Create command class instance
      * 
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users
-     * @param callable|null $dispatcher 
+     * @param callable|null $dispatcher
+     * @param bool $autoReset 
      * @return void 
      */
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
-        callable $dispatcher = null
+        callable $dispatcher = null,
+        bool $autoReset = false
     ) {
         $this->repository = $repository;
         $this->users = $users;
         $this->dispatcher = $dispatcher;
         $this->tokenFactory = new OtpPasswordResetTokenFactory;
+        $this->autoReset = $autoReset;
     }
 
     /**
@@ -83,6 +91,12 @@ class OtpResetPasswordCommand
 
         // Remove the subject token from repostory
         $this->repository->deleteToken($sub);
+
+        // Case the library is configure to auto reset password, we call the reset password
+        // method on the can reset password instance
+        if ($this->autoReset) {
+            $user->resetPassword($password);
+        }
 
         // Call the callback instance on the user and password variables
         return call_user_func($callback, $user, $password);

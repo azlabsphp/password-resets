@@ -66,11 +66,8 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
         if (false === $result) {
             return null;
         }
-        $createdAt = null !== $result->created_at ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$result->created_at) : null;
-        $expiresAt = null !== $createdAt ? $createdAt->modify(sprintf("+%d seconds", $this->expiresTtl)) : null;
 
-        // Return a hashed password token instance
-        return new HashedPasswordResetToken($result->sub, $result->token, $createdAt, $expiresAt);
+        return $this->createHashedPasswordResetToken($result);
     }
 
     public function hasToken(string $sub, string $token): bool
@@ -86,5 +83,21 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
         return $this->connection->transaction(function (string $sub) {
             return $this->connection->delete($sub);
         }, (string)$sub);
+    }
+
+
+    /**
+     * Creates hash password reset token instance
+     * 
+     * @param object $result 
+     * @return HashedPasswordResetToken 
+     */
+    private function createHashedPasswordResetToken(object $result)
+    {
+        $createdAt = null !== $result->created_at ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$result->created_at) : null;
+        $expiresAt = null !== $createdAt ? $createdAt->modify(sprintf("+%d seconds", $this->expiresTtl)) : null;
+
+        // Return a hashed password token instance
+        return new HashedPasswordResetToken($result->sub, $result->token, $createdAt, $expiresAt);
     }
 }

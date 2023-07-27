@@ -5,7 +5,6 @@ use Drewlabs\Passwords\Contracts\CanResetPassword;
 use Drewlabs\Passwords\Contracts\TokenInterface;
 use Drewlabs\Passwords\Exceptions\ThrottleResetException;
 use Drewlabs\Passwords\Exceptions\UserNotFoundException;
-use Drewlabs\Passwords\PasswordResetTokenFactory;
 use Drewlabs\Passwords\PasswordResetTokenHashManager;
 use Drewlabs\Passwords\PasswordResetTokenRepository;
 use Drewlabs\Passwords\Tests\CanResetPasswordProvider;

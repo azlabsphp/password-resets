@@ -3,6 +3,7 @@
 namespace Drewlabs\Passwords\PDO;
 
 use Drewlabs\Passwords\Contracts\ConnectionInterface;
+use Drewlabs\Passwords\Contracts\QueryBuilder;
 
 /**
  * @mixin Adapter
@@ -36,19 +37,22 @@ class Connection implements ConnectionInterface
      * 
      * **Note** By default table name is assumed to be `password_resets` if no option is passed for `pdo_table`.
      * 
-     * @param string $dsn 
+     * @param string|PDO $dsn 
      * @param array|string $options Can be an option array or database table string to work with
      */
-    public function __construct(string $dsn, $options = [])
+    public function __construct($dsn, $options = [])
     {
         $options = is_array($options) ? $options : (is_string($options) ? ['pdo_table' => $options] : []);
         $this->pdo = new Adapter($dsn, $options);
         $this->table($options['table'] ?? $options['pdo_table'] ?? 'password_resets');
     }
 
-    public function select($sub)
+    public function select($query)
     {
-        return $this->pdo->table($this->table)->selectOne(['sub' => $sub]);
+        $query = !is_string($query) && is_callable($query) ? $query : function (QueryBuilder $builder) use ($query) {
+            return $builder->whereSub($query);
+        };
+        return $query(new Builder($this->pdo->table($this->table)))->first();
     }
 
     public function update($sub, array $values = [])
@@ -56,9 +60,12 @@ class Connection implements ConnectionInterface
         return $this->pdo->table($this->table)->update(['sub' => $sub], $values);
     }
 
-    public function delete($sub)
+    public function delete($query)
     {
-        return $this->pdo->table($this->table)->delete(['sub' => $sub]);
+        $query = !is_string($query) && is_callable($query) ? $query : function (QueryBuilder $builder) use ($query) {
+            return $builder->whereSub($query);
+        };
+        return $query(new Builder($this->pdo->table($this->table)))->delete();
     }
 
     public function create(array $values)

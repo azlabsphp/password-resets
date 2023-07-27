@@ -2,7 +2,6 @@
 
 use Drewlabs\Passwords\Otp;
 use Drewlabs\Passwords\OtpPasswordResetTokenFactory;
-use Drewlabs\Passwords\PasswordResetToken;
 use Drewlabs\Passwords\PasswordResetTokenFactory;
 use Drewlabs\Passwords\PasswordResetTokenHashManager;
 use Drewlabs\Passwords\Tests\RandomBytes;

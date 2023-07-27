@@ -2,7 +2,6 @@
 
 namespace Drewlabs\Passwords\Tests;
 
-use Drewlabs\Passwords\Adapter;
 use Drewlabs\Passwords\PDO\Connection;
 
 class InMemoryDatabase

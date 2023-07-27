@@ -20,10 +20,16 @@ class Adapter
      */
     private $pdo;
 
-    public function __construct(string $dsn, array $options = [])
+    /**
+     * Creates PDO adapter instance
+     * 
+     * @param string|PDO $dsn 
+     * @param array $options 
+     */
+    public function __construct($dsn, array $options = [])
     {
         $options = is_array($options) ? $options : [];
-        $this->pdo = new PDO($dsn, $options['user'] ?? null, $options['password'] ?? null, $options);
+        $this->pdo = $dsn instanceof PDO ? $dsn : new PDO($dsn, $options['user'] ?? null, $options['password'] ?? null, $options);
     }
 
     /**

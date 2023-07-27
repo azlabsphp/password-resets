@@ -3,19 +3,13 @@
 use Drewlabs\Passwords\Commands\CreatePasswordResetOtpCommand as CreatePasswordResetCommand;
 use Drewlabs\Passwords\Commands\OtpResetPasswordCommand as ResetPasswordCommand;
 use Drewlabs\Passwords\Contracts\CanResetPassword;
-use Drewlabs\Passwords\Contracts\TokenInterface;
 use Drewlabs\Passwords\Exceptions\PasswordResetTokenInvalidException;
 use Drewlabs\Passwords\Exceptions\UserNotFoundException;
 use Drewlabs\Passwords\Otp;
-use Drewlabs\Passwords\OtpPasswordResetTokenFactory;
-use Drewlabs\Passwords\PasswordResetTokenFactory;
 use Drewlabs\Passwords\PasswordResetTokenHashManager;
 use Drewlabs\Passwords\PasswordResetTokenRepository;
 use Drewlabs\Passwords\Tests\CanResetPasswordProvider;
 use Drewlabs\Passwords\Tests\InMemoryDatabase;
-use Drewlabs\Passwords\Tests\RandomBytes;
-use Drewlabs\Passwords\Tests\TestUrlFactory;
-use Drewlabs\Passwords\UrlFactory;
 use PHPUnit\Framework\TestCase;
 
 class OtpResetPasswordCommandTest extends TestCase
