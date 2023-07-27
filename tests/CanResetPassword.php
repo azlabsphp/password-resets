@@ -16,4 +16,9 @@ class CanResetPassword implements AbstractCanResetPassword
     {
         return 'user@example.com';
     }
+
+    public function resetPassword(string $password)
+    {
+        return sprintf('resetting password %s\n', $password);
+    }
 }

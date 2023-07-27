@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "drewlabs/password-contracts",
-            "version": "v0.2.0",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/password-contracts.git",
-                "reference": "c42b9abca5255448b940f8b7db5e1757cf570351"
+                "reference": "7728d0a9527e9d56b22b8cc15bc0202850da48bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/password-contracts/zipball/c42b9abca5255448b940f8b7db5e1757cf570351",
-                "reference": "c42b9abca5255448b940f8b7db5e1757cf570351",
+                "url": "https://api.github.com/repos/azlabsphp/password-contracts/zipball/7728d0a9527e9d56b22b8cc15bc0202850da48bf",
+                "reference": "7728d0a9527e9d56b22b8cc15bc0202850da48bf",
                 "shasum": ""
             },
             "require": {
@@ -46,9 +46,9 @@
             ],
             "support": {
                 "issues": "https://github.com/azlabsphp/password-contracts/issues",
-                "source": "https://github.com/azlabsphp/password-contracts/tree/v0.2.0"
+                "source": "https://github.com/azlabsphp/password-contracts/tree/v0.2.2"
             },
-            "time": "2023-07-26T23:26:03+00:00"
+            "time": "2023-07-27T10:25:18+00:00"
         }
     ],
     "packages-dev": [
