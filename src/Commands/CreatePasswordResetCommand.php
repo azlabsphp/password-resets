@@ -18,11 +18,6 @@ class CreatePasswordResetCommand
     use SupportThrottleRequests;
 
     /**
-     * @var callable
-     */
-    private $url;
-
-    /**
      * @var PasswordResetTokenFactory
      */
     private $tokenFactory;
@@ -47,17 +42,14 @@ class CreatePasswordResetCommand
      * 
      * @param TokenRepositoryInterface $repository 
      * @param CanResetPasswordProvider $users 
-     * @param PasswordResetTokenFactory $tokenFactory 
-     * @param callable $url 
+     * @param string $key 
      * @param callable|null $dispatcher 
      * @param int $throttleTtl 
-     * @return void 
      */
     public function __construct(
         TokenRepositoryInterface $repository,
         CanResetPasswordProvider $users,
         string $key,
-        callable $url = null,
         callable $dispatcher = null,
         $throttleTtl = 60
     ) {
@@ -65,27 +57,19 @@ class CreatePasswordResetCommand
         $this->users = $users;
         $this->dispatcher = $dispatcher;
         $this->tokenFactory = new PasswordResetTokenFactory($key);
-        $this->url = $url;
         $this->throttleTtl = $throttleTtl;
     }
 
     /**
+     * handle create password reset link
      * 
      * @param string $sub 
-     * @param string|null|Closure(CanResetPasswordProvider $user, TokenInterface $token): void $routeOrCallable 
      * @param null|Closure(CanResetPasswordProvider $user, TokenInterface $token): void $callback 
      * @return void 
      */
-    public function handle(string $sub, $routeOrCallable = null, \Closure $callback = null)
+    public function handle(string $sub, \Closure $callback = null)
     {
         $user = $this->users->retrieveForPasswordReset($sub);
-
-        // Case two parameters are passed as argument and the second argument is a callable instance
-        // we set the callback to be equals to the second argument and the route to be null
-        if (null === $callback && !is_string($routeOrCallable) && is_callable($routeOrCallable)) {
-            $callback = $routeOrCallable;
-            $routeOrCallable = null;
-        }
 
         if (null === $user) {
             throw new UserNotFoundException($sub);
@@ -101,16 +85,13 @@ class CreatePasswordResetCommand
         // Add the token to the tokens collection
         $this->repository->addToken($token);
 
-        $callback = $callback ?? function (CanResetPassword $user, string $url) {
+        $callback = $callback ?? function (CanResetPassword $u, TokenInterface $t) {
             if ($this->dispatcher) {
-                call_user_func($this->dispatcher, new PasswordResetLinkCreated($user, $url));
+                call_user_func($this->dispatcher, new PasswordResetLinkCreated($u, $t));
             }
         };
 
-        // construc the callback arguments
-        $args = null !== $routeOrCallable && null !== $this->url ? [$user, call_user_func($this->url, $routeOrCallable, ['token' => $token->getToken()]), $token] : [$user, $token];
-
         // TODO: Publish event instance
-        return call_user_func_array($callback, $args);
+        return call_user_func_array($callback, [$user, $token]);
     }
 }

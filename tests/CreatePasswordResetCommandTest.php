@@ -30,14 +30,14 @@ class CreatePasswordResetCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes);
 
         // Assert
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage(sprintf("Cannot find user %s", 'test@example.com'));
 
         // Act
-        $command->handle('test@example.com', 'password.create');
+        $command->handle('test@example.com');
     }
 
     
@@ -47,15 +47,15 @@ class CreatePasswordResetCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes);
 
         // Assert
         $this->expectException(ThrottleResetException::class);
         $this->expectExceptionMessage(sprintf("Too many attempts for %s", 'user@example.com'));
 
         // Act
-        $command->handle('user@example.com', 'password.create');
-        $command->handle('user@example.com', 'password.create');
+        $command->handle('user@example.com');
+        $command->handle('user@example.com');
     }
 
     public function test_create_password_reset_command_handle_call_callback_on_success()
@@ -64,19 +64,19 @@ class CreatePasswordResetCommandTest extends TestCase
         $manager =  new PasswordResetTokenHashManager;
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
-        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
+        $command = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes);
 
         $totalCalls = 0;
         $calledWith = null;
         $passwordToken = null;
 
         // Act
-        $callback = function(CanResetPassword $user, string $url, TokenInterface $token) use (&$totalCalls, &$calledWith, &$passwordToken) {
+        $callback = function(CanResetPassword $user, TokenInterface $token) use (&$totalCalls, &$calledWith, &$passwordToken) {
             $totalCalls++;
-            $calledWith = $url;
+            $calledWith = (new UrlFactory(new TestUrlFactory))('password.reset', ['token' => $token->getToken()]);
             $passwordToken = $token->getToken();
         };
-        $command->handle('user@example.com', 'password.create', $callback);
+        $command->handle('user@example.com', $callback);
 
         // Assert
         $this->assertEquals(1, $totalCalls);

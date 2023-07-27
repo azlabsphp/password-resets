@@ -3,13 +3,14 @@
 namespace Drewlabs\Passwords\Events;
 
 use Drewlabs\Passwords\Contracts\CanResetPassword;
+use Drewlabs\Passwords\Contracts\TokenInterface;
 
 class PasswordResetLinkCreated
 {
     /**
-     * @var string
+     * @var TokenInterface
      */
-    private $url;
+    private $token;
 
     /**
      * @var CanResetPassword
@@ -21,18 +22,17 @@ class PasswordResetLinkCreated
      * 
      * 
      * @param CanResetPassword $user 
-     * @param string $url 
-     * @return void 
+     * @param TokenInterface $token 
      */
-    public function __construct(CanResetPassword $user, string $url)
+    public function __construct(CanResetPassword $user, TokenInterface $token)
     {
         $this->user = $user;
-        $this->url = $url;
+        $this->token = $token;
     }
 
-    public function getUrl()
+    public function getToken()
     {
-        return $this->url;
+        return $this->token;
     }
 
     public function getUser()

@@ -50,8 +50,8 @@ class ResetPasswordCommandTest extends TestCase
         $this->expectException(PasswordResetTokenInvalidException::class);
 
         // Act
-        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
-        $createCommand->handle('user@example.com', 'password.create');
+        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes);
+        $createCommand->handle('user@example.com');
         $command->handle('user@example.com', 'MyToken', 'MyPassword');
     }
 
@@ -68,11 +68,11 @@ class ResetPasswordCommandTest extends TestCase
          */
         $passwordToken = null;
         $password = null;
-        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
-        $callback = function(CanResetPassword $user, string $url, TokenInterface $token) use (&$passwordToken) {
+        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes);
+        $callback = function(CanResetPassword $user, TokenInterface $token) use (&$passwordToken) {
             $passwordToken = $token->getToken();
         };
-        $createCommand->handle('user@example.com', 'password.create', $callback);
+        $createCommand->handle('user@example.com', $callback);
         $command->handle('user@example.com', $passwordToken, 'MyPassword', function($user, $pass) use (&$password) {
             $password = $pass;
         });
@@ -93,11 +93,11 @@ class ResetPasswordCommandTest extends TestCase
          * @var string
          */
         $passwordToken = null;
-        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes, new UrlFactory(new TestUrlFactory));
-        $callback = function(CanResetPassword $user, string $url, TokenInterface $token) use (&$passwordToken) {
+        $createCommand = new CreatePasswordResetCommand($repository, new CanResetPasswordProvider, new RandomBytes);
+        $callback = function(CanResetPassword $user, TokenInterface $token) use (&$passwordToken) {
             $passwordToken = $token->getToken();
         };
-        $createCommand->handle('user@example.com', 'password.create', $callback);
+        $createCommand->handle('user@example.com', $callback);
         $command->handle('user@example.com', $passwordToken, 'MyPassword');
 
         // Assert
