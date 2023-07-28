@@ -48,6 +48,16 @@ class PasswordResetTokenRepository implements TokenRepositoryInterface
     {
         $this->connection->transaction(function (TokenInterface $token) {
             $hashedToken = $this->hasher->make($token);
+            // Case the subject already exists, we update the password reset token for the subject
+            // This fix the bug where multiple token is generated for a single subject
+            if ($this->getToken($sub = (string)$hashedToken->getSubject())) {
+                $this->connection->update($sub, [
+                    'sub' => (string)$hashedToken->getSubject(),
+                    'token' => $hashedToken->getToken(),
+                    'created_at' => $token->getCreatedAt()->format('Y-m-d H:i:s')
+                ]);
+                return;
+            }
             // Execute the PDO statement
             $this->connection->create([
                 'sub' => (string)$hashedToken->getSubject(),
