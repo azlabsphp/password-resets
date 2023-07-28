@@ -79,7 +79,7 @@ class OtpResetPasswordCommand
 
         // Check if repository has a given token
         // If repository does not have the given token for the subject, we throw a PasswordResetTokenInvalidException
-        if (!$this->repository->hasToken($sub, $token = $this->tokenFactory->create($sub, (string)$otp)->getToken())) {
+        if (!$this->repository->hasToken($sub, $this->tokenFactory->create($sub, (string)$otp)->getToken())) {
             throw new PasswordResetTokenInvalidException($otp);
         }
 
