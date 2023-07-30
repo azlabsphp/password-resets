@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "drewlabs/password-contracts",
-            "version": "v0.2.8",
+            "version": "v0.2.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/password-contracts.git",
-                "reference": "b72c37db93679b9ee231d377e6c87b56df2cfbd0"
+                "reference": "36c9ae2cf4621d56b53ec895c3422cb43301b170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/password-contracts/zipball/b72c37db93679b9ee231d377e6c87b56df2cfbd0",
-                "reference": "b72c37db93679b9ee231d377e6c87b56df2cfbd0",
+                "url": "https://api.github.com/repos/azlabsphp/password-contracts/zipball/36c9ae2cf4621d56b53ec895c3422cb43301b170",
+                "reference": "36c9ae2cf4621d56b53ec895c3422cb43301b170",
                 "shasum": ""
             },
             "require": {
@@ -46,9 +46,9 @@
             ],
             "support": {
                 "issues": "https://github.com/azlabsphp/password-contracts/issues",
-                "source": "https://github.com/azlabsphp/password-contracts/tree/v0.2.8"
+                "source": "https://github.com/azlabsphp/password-contracts/tree/v0.2.20"
             },
-            "time": "2023-07-27T15:28:02+00:00"
+            "time": "2023-07-30T10:48:20+00:00"
         },
         {
             "name": "tuupola/base62",
