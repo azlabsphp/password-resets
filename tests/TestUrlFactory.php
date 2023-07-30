@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Passwords\Tests;
 
 class TestUrlFactory
@@ -10,10 +21,9 @@ class TestUrlFactory
     private $name;
 
     /**
-     * Creates class instance
-     * 
-     * @param string $name 
-     * @return void 
+     * Creates class instance.
+     *
+     * @return void
      */
     public function __construct(string $name = 'examples')
     {
@@ -22,7 +32,7 @@ class TestUrlFactory
 
     public function __invoke(string $name, $parameters = [])
     {
-        $baseUrl = 'http://localhost:8000/api/v1/' . $this->name;
+        $baseUrl = 'http://localhost:8000/api/v1/'.$this->name;
 
         if (empty($parameters)) {
             return $baseUrl;
@@ -31,8 +41,8 @@ class TestUrlFactory
         $baseUrl .= '?';
 
         foreach ($parameters as $key => $value) {
-            # code...
-            $baseUrl .= sprintf("%s=%s", (string)$key, (string)$value);
+            // code...
+            $baseUrl .= sprintf('%s=%s', (string) $key, (string) $value);
         }
 
         return $baseUrl;

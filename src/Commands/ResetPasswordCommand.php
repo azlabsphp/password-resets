@@ -1,19 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Passwords\Commands;
 
-
-use Drewlabs\Passwords\Exceptions\PasswordResetTokenInvalidException;
-use Drewlabs\Passwords\Exceptions\UserNotFoundException;
-use Drewlabs\Passwords\Events\ResetPassword;
-use Closure;
 use Drewlabs\Passwords\Contracts\CanResetPassword;
 use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
 use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
+use Drewlabs\Passwords\Events\ResetPassword;
+use Drewlabs\Passwords\Exceptions\PasswordResetTokenInvalidException;
+use Drewlabs\Passwords\Exceptions\UserNotFoundException;
 
 class ResetPasswordCommand
 {
-
     /**
      * @var TokenRepositoryInterface
      */
@@ -35,13 +43,9 @@ class ResetPasswordCommand
     private $autoReset = false;
 
     /**
-     * Create command class instance
-     * 
-     * @param TokenRepositoryInterface $repository 
-     * @param CanResetPasswordProvider $users 
-     * @param callable|null $dispatcher
-     * @param bool $autoReset
-     * @return void 
+     * Create command class instance.
+     *
+     * @return void
      */
     public function __construct(
         TokenRepositoryInterface $repository,
@@ -56,19 +60,19 @@ class ResetPasswordCommand
     }
 
     /**
-     * handle reset password action
-     * 
-     * @param mixed $sub 
-     * @param string $token 
-     * @param string $password 
-     * @param Closure(Authenticatable $user, string $password) $callback 
-     * @return mixed 
-     * @throws UserNotFoundException 
-     * @throws PasswordResetTokenInvalidException 
+     * handle reset password action.
+     *
+     * @param mixed                                             $sub
+     * @param \Closure(Authenticatable $user, string $password) $callback
+     *
+     * @throws UserNotFoundException
+     * @throws PasswordResetTokenInvalidException
+     *
+     * @return mixed
      */
-    public function handle($sub, string $token, string $password, \Closure $callback  = null)
+    public function handle($sub, string $token, string $password, \Closure $callback = null)
     {
-        if (null === ($user = $this->users->retrieveForPasswordReset((string)$sub))) {
+        if (null === ($user = $this->users->retrieveForPasswordReset((string) $sub))) {
             throw new UserNotFoundException($sub);
         }
 
@@ -80,7 +84,7 @@ class ResetPasswordCommand
 
         $callback = $callback ?? function (CanResetPassword $user, string $password) {
             if ($this->dispatcher) {
-                call_user_func($this->dispatcher, new ResetPassword($user, $password));
+                \call_user_func($this->dispatcher, new ResetPassword($user, $password));
             }
         };
 
@@ -94,6 +98,6 @@ class ResetPasswordCommand
         }
 
         // Call the callback instance on the user and password variables
-        return call_user_func($callback, $user, $password);
+        return \call_user_func($callback, $user, $password);
     }
 }

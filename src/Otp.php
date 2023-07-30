@@ -1,10 +1,17 @@
 <?php
 
-namespace Drewlabs\Passwords;
+declare(strict_types=1);
 
-use TypeError;
-use Error;
-use Exception;
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Drewlabs\Passwords;
 
 class Otp
 {
@@ -14,11 +21,11 @@ class Otp
     private $value;
 
     /**
-     * Creates otp instance
-     * 
-     * @throws TypeError 
-     * @throws Error 
-     * @throws Exception 
+     * Creates otp instance.
+     *
+     * @throws \TypeError
+     * @throws \Error
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -26,9 +33,9 @@ class Otp
     }
 
     /**
-     * Returns the otp instance as string
-     * 
-     * @return string 
+     * Returns the otp instance as string.
+     *
+     * @return string
      */
     public function __toString()
     {

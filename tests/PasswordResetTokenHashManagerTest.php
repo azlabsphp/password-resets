@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Drewlabs\Passwords\Otp;
 use Drewlabs\Passwords\OtpPasswordResetTokenFactory;
 use Drewlabs\Passwords\PasswordResetTokenFactory;
@@ -9,12 +20,11 @@ use PHPUnit\Framework\TestCase;
 
 class PasswordResetTokenHashManagerTest extends TestCase
 {
-
     public function test_password_reset_token_hash_Manager_make_create_an_bcrypt_hash_by_default()
     {
         // Initialize
         $manager = new PasswordResetTokenHashManager();
-        $token = (new PasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com');
+        $token = (new PasswordResetTokenFactory((string)(new RandomBytes(16))))->create('user@example.com');
 
         // Act
         $hashedValue = $manager->make($token);
@@ -27,12 +37,12 @@ class PasswordResetTokenHashManagerTest extends TestCase
     {
         // Initialize
         $manager = new PasswordResetTokenHashManager();
-        $otp = new Otp;
-        $token = (new OtpPasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com', $otp);
+        $otp = (string)(new Otp);
+        $token = (new OtpPasswordResetTokenFactory((string)(new RandomBytes(16))))->create('user@example.com', $otp);
 
         // Act
         $hashedToken = $manager->make($token);
-        $newToken = (new OtpPasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com', $otp);
+        $newToken = (new OtpPasswordResetTokenFactory((string)(new RandomBytes(16))))->create('user@example.com', $otp);
 
         // Assert
         $this->assertTrue($manager->check($hashedToken, $newToken->getToken()));
@@ -42,7 +52,7 @@ class PasswordResetTokenHashManagerTest extends TestCase
     {
         // Initialize
         $manager = new PasswordResetTokenHashManager();
-        $token = (new PasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com');
+        $token = (new PasswordResetTokenFactory((string)(new RandomBytes(16))))->create('user@example.com');
 
         // Act
         $hashedToken = $manager->make($token);

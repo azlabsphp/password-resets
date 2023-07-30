@@ -1,8 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Passwords;
 
-use DateTimeInterface;
 use Drewlabs\Passwords\Contracts\HashedTokenInterface;
 
 class HashedPasswordResetToken implements HashedTokenInterface
@@ -18,7 +28,7 @@ class HashedPasswordResetToken implements HashedTokenInterface
     private $hash;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     private $createdAt;
 
@@ -28,13 +38,11 @@ class HashedPasswordResetToken implements HashedTokenInterface
     private $expiresAt;
 
     /**
-     * Create hashed password token class instance
-     * 
-     * @param string $sub 
-     * @param string $hash 
-     * @param \DateTimeInterface $createdAt
-     * @param \DateTimeInterface $expiresAt 
-     * @return void 
+     * Create hashed password token class instance.
+     *
+     * @param \DateTimeInterface $expiresAt
+     *
+     * @return void
      */
     public function __construct(string $sub, string $hash, \DateTimeInterface $createdAt, \DateTimeInterface $expiresAt = null)
     {
@@ -44,7 +52,12 @@ class HashedPasswordResetToken implements HashedTokenInterface
         $this->expiresAt = $expiresAt;
     }
 
-    public function getCreatedAt(): DateTimeInterface
+    public function __toString()
+    {
+        return $this->hash;
+    }
+
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -69,13 +82,8 @@ class HashedPasswordResetToken implements HashedTokenInterface
         return $this->expiresAt;
     }
 
-    public function withExpiresAt(DateTimeInterface $at)
+    public function withExpiresAt(\DateTimeInterface $at)
     {
         return new static($this->getSubject(), $this->getToken(), $this->getCreatedAt(), $at);
-    } 
-
-    public function __toString()
-    {
-        return $this->hash;
     }
 }

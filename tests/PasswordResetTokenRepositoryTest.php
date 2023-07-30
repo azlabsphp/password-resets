@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Drewlabs\Passwords\PasswordResetToken;
 use Drewlabs\Passwords\PasswordResetTokenFactory;
 use Drewlabs\Passwords\PasswordResetTokenHashManager;
@@ -13,26 +24,26 @@ class PasswordResetTokenRepositoryTest extends TestCase
     public function test_pdo_token_repository_add_token()
     {
         // Initialize
-        $manager =  new PasswordResetTokenHashManager;
+        $manager = new PasswordResetTokenHashManager();
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
         // Act
-        $repository->addToken((new PasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com'));
+        $repository->addToken((new PasswordResetTokenFactory((string)(new RandomBytes(16))))->create('user@example.com'));
         $result = $repository->getToken('user@example.com');
 
         // Assert
-        $this->assertEquals('user@example.com', $result->getSubject());
+        $this->assertSame('user@example.com', $result->getSubject());
         $repository->deleteToken('user@example.com');
     }
 
     public function test_password_reset_token_repository_has_token_returns_false_if_token_expires()
     {
         // Initialize
-        $createdAt = (new DateTimeImmutable)->modify("-2 hours");
+        $createdAt = (new DateTimeImmutable())->modify('-2 hours');
         $randomBytes = new RandomBytes();
-        $passwordResetToken = new PasswordResetToken('user@example.com', $randomBytes, $createdAt);
-        $manager =  new PasswordResetTokenHashManager;
+        $passwordResetToken = new PasswordResetToken('user@example.com', (string)$randomBytes, $createdAt);
+        $manager = new PasswordResetTokenHashManager();
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
@@ -46,10 +57,10 @@ class PasswordResetTokenRepositoryTest extends TestCase
     public function test_password_reset_token_repository_has_token_returns_false_if_token_is_different()
     {
         // Initialize
-        $createdAt = (new DateTimeImmutable);
+        $createdAt = (new DateTimeImmutable());
         $randomBytes = new RandomBytes();
-        $passwordResetToken = new PasswordResetToken('user@example.com', $randomBytes, $createdAt);
-        $manager =  new PasswordResetTokenHashManager;
+        $passwordResetToken = new PasswordResetToken('user@example.com', (string)$randomBytes, $createdAt);
+        $manager = new PasswordResetTokenHashManager();
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
@@ -57,20 +68,19 @@ class PasswordResetTokenRepositoryTest extends TestCase
         $repository->addToken($passwordResetToken);
 
         // Assert
-        $this->assertFalse($repository->hasToken('user@example.com', (string)(new RandomBytes)));
+        $this->assertFalse($repository->hasToken('user@example.com', (string) (new RandomBytes())));
     }
 
-    
     public function test_pdo_token_repository_delete_token_removes_subject_token_from_repository()
     {
         // Initialize
-        $manager =  new PasswordResetTokenHashManager;
+        $manager = new PasswordResetTokenHashManager();
         $database = new InMemoryDatabase();
         $repository = new PasswordResetTokenRepository($database->getConnection(), $manager);
 
         // Act
-        $repository->addToken((new PasswordResetTokenFactory(new RandomBytes(16)))->create('user@example.com'));
-        
+        $repository->addToken((new PasswordResetTokenFactory((string)(new RandomBytes(16))))->create('user@example.com'));
+
         $repository->deleteToken('user@example.com');
         $result = $repository->getToken('user@example.com');
 

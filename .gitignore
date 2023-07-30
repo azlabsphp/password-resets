@@ -2,3 +2,5 @@ vendor/
 .vscode/
 .DS_Store
 memory
+coverage/
+.phpunit.cache/

@@ -1,17 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Passwords\Commands;
 
-use Drewlabs\Passwords\Exceptions\ThrottleResetException;
-use Drewlabs\Passwords\Exceptions\UserNotFoundException;
-use Drewlabs\Passwords\Events\PasswordResetLinkCreated;
-use Drewlabs\Passwords\PasswordResetTokenFactory;
-use Drewlabs\Passwords\Traits\SupportThrottleRequests;
-use Closure;
 use Drewlabs\Passwords\Contracts\CanResetPassword;
 use Drewlabs\Passwords\Contracts\CanResetPasswordProvider;
 use Drewlabs\Passwords\Contracts\TokenInterface;
 use Drewlabs\Passwords\Contracts\TokenRepositoryInterface;
+use Drewlabs\Passwords\Events\PasswordResetLinkCreated;
+use Drewlabs\Passwords\Exceptions\ThrottleResetException;
+use Drewlabs\Passwords\Exceptions\UserNotFoundException;
+use Drewlabs\Passwords\PasswordResetTokenFactory;
+use Drewlabs\Passwords\Traits\SupportThrottleRequests;
 
 class CreatePasswordResetCommand
 {
@@ -38,13 +48,9 @@ class CreatePasswordResetCommand
     private $dispatcher;
 
     /**
-     * Create class instances
-     * 
-     * @param TokenRepositoryInterface $repository 
-     * @param CanResetPasswordProvider $users 
-     * @param string $key 
-     * @param callable|null $dispatcher 
-     * @param int $throttleTtl 
+     * Create class instances.
+     *
+     * @param int $throttleTtl
      */
     public function __construct(
         TokenRepositoryInterface $repository,
@@ -61,11 +67,11 @@ class CreatePasswordResetCommand
     }
 
     /**
-     * handle create password reset link
-     * 
-     * @param string $sub 
-     * @param null|Closure(CanResetPasswordProvider $user, TokenInterface $token): void $callback 
-     * @return void 
+     * handle create password reset link.
+     *
+     * @param \Closure(CanResetPasswordProvider $user, TokenInterface $token): void|null $callback
+     *
+     * @return void
      */
     public function handle(string $sub, \Closure $callback = null)
     {
@@ -87,11 +93,11 @@ class CreatePasswordResetCommand
 
         $callback = $callback ?? function (CanResetPassword $u, TokenInterface $t) {
             if ($this->dispatcher) {
-                call_user_func($this->dispatcher, new PasswordResetLinkCreated($u, $t));
+                \call_user_func($this->dispatcher, new PasswordResetLinkCreated($u, $t));
             }
         };
 
         // TODO: Publish event instance
-        return call_user_func_array($callback, [$user, $token]);
+        return \call_user_func_array($callback, [$user, $token]);
     }
 }

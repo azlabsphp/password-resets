@@ -1,8 +1,17 @@
 <?php
 
-namespace Drewlabs\Passwords\Traits;
+declare(strict_types=1);
 
-use DateTimeInterface;
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Drewlabs\Passwords\Traits;
 
 trait PasswordToken
 {
@@ -17,14 +26,14 @@ trait PasswordToken
     private $sub;
 
     /**
-     * @var DateTimeInterface
+     * @var \DateTimeInterface
      */
     private $createdAt;
 
     /**
      * @var \DateTimeInterface
      */
-    private $expiresAt;   
+    private $expiresAt;
 
     public function getSubject()
     {
@@ -33,10 +42,10 @@ trait PasswordToken
 
     public function getToken(): string
     {
-        return strval($this->token);
+        return (string) $this->token;
     }
 
-    public function getCreatedAt(): DateTimeInterface
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }

@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Passwords;
 
 use Drewlabs\Passwords\Contracts\HashedTokenInterface;
@@ -14,18 +25,17 @@ class PasswordResetTokenHashManager implements TokenHasher
     private $hasher;
 
     /**
-     * Creates token hash manager class instance
-     * 
-     * @param \Drewlabs\Contracts\Hasher\IHasher|null $hasher 
+     * Creates token hash manager class instance.
+     *
+     * @param \Drewlabs\Contracts\Hasher\IHasher|null $hasher
      */
     public function __construct($hasher = null)
     {
         // Use md5 hasher if not hasher is provided
-        $this->hasher = $hasher ?? new class
-        {
+        $this->hasher = $hasher ?? new class() {
             public function make($value, array $options = [])
             {
-                return password_hash((string)$value, PASSWORD_BCRYPT, $options);
+                return password_hash((string) $value, \PASSWORD_BCRYPT, $options);
             }
 
             public function check($value, $hashed_value, array $options = []): bool
@@ -35,7 +45,7 @@ class PasswordResetTokenHashManager implements TokenHasher
 
             public function needsRehash(string $hash, array $options = [])
             {
-                return password_needs_rehash($hash, PASSWORD_BCRYPT, $options ?? []);
+                return password_needs_rehash($hash, \PASSWORD_BCRYPT, $options ?? []);
             }
         };
     }
